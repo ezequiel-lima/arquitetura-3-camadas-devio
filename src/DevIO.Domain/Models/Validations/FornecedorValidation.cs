@@ -17,7 +17,7 @@ namespace DevIO.Domain.Models.Validations
                     .WithMessage("O campo {PropertyName} precisa ter {ComparisonValue} caracteres e foi fornecido {PropertyValue}");
 
                 RuleFor(x => x.Documento)
-                    .Must(x => CpfValidacao.Validar(x)) 
+                    .Must(x => CpfValidacao.Validar(x))
                     .WithMessage("O {PropertyName} fornecido é inválido");
             });
 
