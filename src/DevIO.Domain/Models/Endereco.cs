@@ -9,5 +9,8 @@
         public string? Bairro { get; set; }
         public string? Cidade { get; set; }
         public string? Estado { get; set; }
+
+        /* apenas para mapeamento do Entity Framework */
+        public Fornecedor Fornecedor { get; set; }
     }
 }

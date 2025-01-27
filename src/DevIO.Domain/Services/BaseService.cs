@@ -1,13 +1,31 @@
-﻿using DevIO.Domain.Models;
+﻿using DevIO.Domain.Interfaces;
+using DevIO.Domain.Models;
+using DevIO.Domain.Notifications;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace DevIO.Domain.Services
 {
     public abstract class BaseService
     {
+        private readonly INotificador _notificador;
+
+        protected BaseService(INotificador notificador)
+        {
+            _notificador = notificador;
+        }
+
+        protected void Notificar(ValidationResult validationResult)
+        {
+            foreach (var item in validationResult.Errors)
+            {
+                Notificar(item.ErrorMessage);
+            }
+        }
+
         protected void Notificar(string mensagem)
         {
-
+            _notificador.Manipular(new Notificacao(mensagem));
         }
 
         protected bool ExecutarValidacao<TValidation, TEntity>(TValidation validacao, TEntity entidade)
@@ -18,6 +36,8 @@ namespace DevIO.Domain.Services
 
             if (validator.IsValid)           
                 return true;
+
+            Notificar(validator);
 
             return false;
         }
