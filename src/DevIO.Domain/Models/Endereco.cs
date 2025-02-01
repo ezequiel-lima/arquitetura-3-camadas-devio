@@ -11,6 +11,7 @@
         public string? Estado { get; set; }
 
         /* apenas para mapeamento do Entity Framework */
+        public Guid FornecedorId { get; set; }
         public Fornecedor Fornecedor { get; set; }
     }
 }

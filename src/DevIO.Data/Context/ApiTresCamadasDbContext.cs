@@ -7,7 +7,9 @@ namespace DevIO.Data.Context
     {
         public ApiTresCamadasDbContext(DbContextOptions<ApiTresCamadasDbContext> options) : base(options) 
         {
-
+            // Desativa o rastreamento de entidades (NoTracking) e a detecção automática de alterações.
+            ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
+            ChangeTracker.AutoDetectChangesEnabled = false;
         }
 
         public DbSet<Produto> Produtos { get; set; }
@@ -39,6 +41,26 @@ namespace DevIO.Data.Context
             }
 
             base.OnModelCreating(modelBuilder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            // Ao salvar no banco de dados, este método garante que:
+            // - Quando um novo registro for adicionado, a propriedade "DataCadastro" será preenchida automaticamente com a data atual.
+            // - Quando um registro existente for modificado, a propriedade "DataCadastro" não será alterada, preservando o valor original.
+            foreach (var entry in ChangeTracker.Entries().Where(entry => entry.Entity.GetType().GetProperty("DataCadastro") != null))
+            {
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property("DataCadastro").CurrentValue = DateTime.Now;
+                }
+                if (entry.State == EntityState.Modified)
+                {
+                    entry.Property("DataCadastro").IsModified = false;
+                }
+            }
+
+            return base.SaveChangesAsync(cancellationToken);
         }
     }
 }
