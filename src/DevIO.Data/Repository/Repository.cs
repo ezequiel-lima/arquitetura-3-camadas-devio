@@ -6,6 +6,8 @@ using System.Linq.Expressions;
 
 namespace DevIO.Data.Repository
 {
+    // Para implementar o padrão Unit of Work é necessario remover await SaveChanges(); nos métodos como adicionar, remover, atualizar
+    // Pois a principal vantagem do Unit of Work: controlar transações e agrupar múltiplas operações antes de salvar
     public abstract class Repository<TEntity> : IRepository<TEntity> where TEntity : Entity, new()
     {
         protected readonly ApiTresCamadasDbContext _dbContext;

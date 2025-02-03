@@ -1,3 +1,4 @@
+using DevIO.Api.Configurations;
 using DevIO.Data.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,8 @@ builder.Services.AddDbContext<ApiTresCamadasDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+
+builder.Services.ResolveDependencies();
 
 var app = builder.Build();
 
