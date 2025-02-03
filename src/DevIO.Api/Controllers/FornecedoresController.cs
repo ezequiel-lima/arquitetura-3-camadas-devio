@@ -2,8 +2,8 @@
 
 namespace DevIO.Api.Controllers
 {
-    [Route("api/[controller]")]
-    public class FornecedoresController : MainController
-    {
-    }
+    //[Route("api/[controller]")]
+    //public class FornecedoresController : MainController
+    //{
+    //}
 }

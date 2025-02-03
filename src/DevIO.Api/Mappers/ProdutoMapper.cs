@@ -33,5 +33,10 @@ namespace DevIO.Domain.Mappers
                 NomeFornecedor = entity.Fornecedor.Nome
             };
         }
+
+        public static IEnumerable<ProdutoViewModel> MapearParaViewModel(IEnumerable<Produto> produtos)
+        {
+            return produtos.Select(MapearParaViewModel);
+        }
     }
 }
