@@ -1,4 +1,5 @@
-﻿using DevIO.Api.ViewModels;
+﻿using DevIO.Api.Dto.Requests;
+using DevIO.Api.Dto.Responses;
 using DevIO.Domain.Mappers;
 using DevIO.Domain.Models;
 
@@ -6,32 +7,47 @@ namespace DevIO.Api.Mappers
 {
     public static class FornecedorMapper
     {
-        public static Fornecedor MapearParaEntidade(this FornecedorViewModel viewModel)
+        public static Fornecedor MapearParaEntidade(this CreateFornecedorRequest fornecedor)
         {
             return new Fornecedor
             {
-                Id = viewModel.Id,
-                Nome = viewModel.Nome,
-                Documento = viewModel.Documento,
-                TipoFornecedor = (ETipoFornecedor)viewModel.TipoFornecedor, 
-                Ativo = viewModel.Ativo,
-                Endereco = viewModel.Endereco?.MapearParaEntidade(),
-                Produtos = viewModel.Produtos?.Select(x => x.MapearParaEntidade()).ToList() ?? new List<Produto>() 
+                Nome = fornecedor.Nome,
+                Documento = fornecedor.Documento,
+                TipoFornecedor = (ETipoFornecedor)fornecedor.TipoFornecedor,
+                Ativo = fornecedor.Ativo,
+                Endereco = fornecedor.Endereco.MapearParaEntidade()
             };
         }
 
-        public static FornecedorViewModel MapearParaViewModel(this Fornecedor entity)
+        public static FornecedorResponse MapearParaResponse(this Fornecedor fornecedor)
         {
-            return new FornecedorViewModel
+            return new FornecedorResponse
             {
-                Id = entity.Id,
-                Nome = entity.Nome,
-                Documento = entity.Documento,
-                TipoFornecedor = (int)entity.TipoFornecedor,
-                Ativo = entity.Ativo,
-                Endereco = entity.Endereco?.MapearParaViewModel(),
-                Produtos = entity.Produtos?.Select(p => p.MapearParaViewModel()).ToList() ?? new List<ProdutoViewModel>() 
+                Id = fornecedor.Id,
+                Nome = fornecedor.Nome,
+                Documento = fornecedor.Documento,
+                TipoFornecedor = (int)fornecedor.TipoFornecedor,
+                Ativo = fornecedor.Ativo
             };
+        }
+
+        public static DetailsFornecedorResponse MapearParaDetailsResponse(this Fornecedor fornecedor)
+        {
+            return new DetailsFornecedorResponse
+            {
+                Id = fornecedor.Id,
+                Nome = fornecedor.Nome,
+                Documento = fornecedor.Documento,
+                TipoFornecedor = (int)fornecedor.TipoFornecedor,
+                Ativo = fornecedor.Ativo,
+                Endereco = fornecedor.Endereco?.MapearParaResponse(),
+                Produtos = fornecedor.Produtos?.Select(x => x.MapearParaResponse()).ToList() ?? new List<ProdutoResponse>()
+            };
+        }
+
+        public static IEnumerable<FornecedorResponse> MapearParaResponse(IEnumerable<Fornecedor> fornecedores)
+        {
+            return fornecedores.Select(MapearParaResponse);
         }
     }
 }

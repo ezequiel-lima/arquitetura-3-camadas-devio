@@ -1,4 +1,5 @@
-﻿using DevIO.Api.ViewModels;
+﻿using DevIO.Api.Dto.Requests;
+using DevIO.Api.Dto.Responses;
 using DevIO.Domain.Interfaces;
 using DevIO.Domain.Mappers;
 using Microsoft.AspNetCore.Mvc;
@@ -17,53 +18,57 @@ namespace DevIO.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IEnumerable<ProdutoViewModel>> ObterTodos()
+        public async Task<ActionResult<IEnumerable<ProdutoResponse>>> ObterTodos()
         {
             var produtos = await _produtoService.ObterTodos();
-            return ProdutoMapper.MapearParaViewModel(produtos);
+            var response = ProdutoMapper.MapearParaResponse(produtos);
+            return CustomResponse(HttpStatusCode.OK, response);
         }
 
         [HttpGet("{id:guid}")]
-        public async Task<ActionResult<ProdutoViewModel>> ObterPorId(Guid id)
+        public async Task<ActionResult<ProdutoResponse>> ObterPorId(Guid id)
         {
             var produto = await _produtoService.ObterPorId(id);
 
             if (produto is null)
                 return NotFound();
 
-            return ProdutoMapper.MapearParaViewModel(produto);
+            var response = ProdutoMapper.MapearParaResponse(produto);
+            return CustomResponse(HttpStatusCode.OK, response);
         }
 
         [HttpPost]
-        public async Task<ActionResult<ProdutoViewModel>> Adicionar(ProdutoViewModel produtoViewModel)
+        public async Task<IActionResult> Adicionar(CreateProdutoRequest createProdutoRequest)
         {
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var produto = ProdutoMapper.MapearParaEntidade(produtoViewModel);
+            var produto = ProdutoMapper.MapearParaEntidade(createProdutoRequest);
             await _produtoService.Adicionar(produto);
 
-            return CustomResponse(HttpStatusCode.Created, produtoViewModel);
+            var response = ProdutoMapper.MapearParaCreateResponse(produto);
+
+            return CustomResponse(HttpStatusCode.Created, response);
         }
 
         [HttpPut("{id:guid}")]
-        public async Task<IActionResult> Atualizar(Guid id, ProdutoViewModel produtoViewModel)
+        public async Task<IActionResult> Atualizar(Guid id, UpdateProdutoRequest updateProdutoRequest)
         {
-            if (id != produtoViewModel.Id)
-            {
-                NotificarErro("Os ids informados não são iguais!");
-                return CustomResponse();
-            }
-
             if (!ModelState.IsValid) return CustomResponse(ModelState);
 
-            var produto = ProdutoMapper.MapearParaEntidade(produtoViewModel);
+            if (id != updateProdutoRequest.Id)
+            {
+                NotificarErro("Os ids informados não são iguais!");
+                return CustomResponse(HttpStatusCode.BadRequest);
+            }
+
+            var produto = ProdutoMapper.MapearParaEntidade(updateProdutoRequest);
             await _produtoService.Atualizar(produto);
 
             return CustomResponse(HttpStatusCode.NoContent);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<ActionResult<ProdutoViewModel>> Excluir(Guid id)
+        public async Task<IActionResult> Excluir(Guid id)
         {
             await _produtoService.Remover(id);
             return CustomResponse(HttpStatusCode.NoContent);

@@ -13,6 +13,16 @@ namespace DevIO.Domain.Services
             _fornecedorRepository = fornecedorRepository;
         }
 
+        public async Task<Fornecedor?> ObterPorId(Guid id)
+        {
+            return await _fornecedorRepository.ObterFornecedorProdutosEndereco(id);
+        }
+
+        public async Task<IEnumerable<Fornecedor>> ObterTodos()
+        {
+            return await _fornecedorRepository.ObterTodos();
+        }
+
         public async Task Adicionar(Fornecedor fornecedor)
         {
             if (!ExecutarValidacao(new FornecedorValidation(), fornecedor)

@@ -1,29 +1,28 @@
-﻿using DevIO.Api.ViewModels;
+﻿using DevIO.Api.Dto.Requests;
+using DevIO.Api.Dto.Responses;
 using DevIO.Domain.Models;
 
 namespace DevIO.Api.Mappers
 {
     public static class EnderecoMapper
     {
-        public static Endereco MapearParaEntidade(this EnderecoViewModel viewModel)
+        public static Endereco MapearParaEntidade(this CreateEnderecoRequest createEnderecoRequest)
         {
             return new Endereco
             {
-                Id = viewModel.Id,
-                Logradouro = viewModel.Logradouro,
-                Numero = viewModel.Numero,
-                Complemento = viewModel.Complemento,
-                Bairro = viewModel.Bairro,
-                Cep = viewModel.Cep,
-                Cidade = viewModel.Cidade,
-                Estado = viewModel.Estado,
-                FornecedorId = viewModel.FornecedorId
+                Logradouro = createEnderecoRequest.Logradouro,
+                Numero = createEnderecoRequest.Numero,
+                Complemento = createEnderecoRequest.Complemento,
+                Bairro = createEnderecoRequest.Bairro,
+                Cep = createEnderecoRequest.Cep,
+                Cidade = createEnderecoRequest.Cidade,
+                Estado = createEnderecoRequest.Estado
             };
         }
 
-        public static EnderecoViewModel MapearParaViewModel(this Endereco entity)
+        public static EnderecoResponse MapearParaResponse(this Endereco entity)
         {
-            return new EnderecoViewModel
+            return new EnderecoResponse
             {
                 Id = entity.Id,
                 Logradouro = entity.Logradouro,

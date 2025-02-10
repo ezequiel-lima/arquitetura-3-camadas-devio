@@ -1,19 +1,17 @@
-﻿using DevIO.Domain.Models;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace DevIO.Api.ViewModels
+namespace DevIO.Api.Dto.Requests
 {
-    public class ProdutoViewModel
+    public class UpdateProdutoRequest
     {
-        // Essas validações impedem que dados inválidos sejam enviados para a camada de domínio, evitando processamento desnecessário.
         public Guid Id { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [StringLength(200, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
+        [StringLength(200, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres")]
         public string? Nome { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [StringLength(1000, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 2)]
+        [StringLength(1000, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres")]
         public string? Descricao { get; set; }
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
@@ -25,7 +23,5 @@ namespace DevIO.Api.ViewModels
 
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public Guid FornecedorId { get; set; }
-
-        public string? NomeFornecedor { get; set; }
     }
 }
